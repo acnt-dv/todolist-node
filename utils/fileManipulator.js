@@ -1,7 +1,7 @@
 let fs = require('fs');
 
 /*
-let readerStream = fs.createReadStream(__dirname + '/../data/list');
+let readerStream = fs.createReadStream(__dirname + '/../data/list.json');
 readerStream.setEncoding("utf-8");
 
 readerStream.on('data', function (chunk) {
@@ -19,7 +19,7 @@ readerStream.on('error', function (err) {
 async function readData() {
     try {
         console.log('Reading file ...');
-        return JSON.parse(fs.readFileSync(__dirname + '/../data/list').toString());
+        return JSON.parse(fs.readFileSync(__dirname + '/../data/list.json').toString());
     } catch (e) {
         throw new Error(`Reading failed with error: ${e.stackTrace}`);
     }
@@ -28,7 +28,7 @@ async function readData() {
 function writeData(storageData) {
     try {
         console.log('Writing file ...');
-        fs.writeFileSync(__dirname + '/../data/list', JSON.stringify(storageData), /*{flag: "a+"}*/);
+        fs.writeFileSync(__dirname + '/../data/list.json', JSON.stringify(storageData), /*{flag: "a+"}*/);
         return 'File manipulated successfully.';
     } catch (e) {
         throw new Error(`Writing failed with error: ${e.stackTrace}`);
