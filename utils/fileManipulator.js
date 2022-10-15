@@ -19,7 +19,11 @@ readerStream.on('error', function (err) {
 async function readData() {
     try {
         console.log('Reading file ...');
-        return JSON.parse(fs.readFileSync(__dirname + '/../data/list.json').toString());
+        let storageData = await JSON.parse(fs.readFileSync(__dirname + '/../data/list.json').toString());
+        if (storageData.length > 0) {
+            return sortData(storageData);
+        }
+        return storageData;
     } catch (e) {
         throw new Error(`Reading failed with error: ${e}`);
     }
@@ -39,13 +43,14 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
+function sortData(list) {
+    return list.sort((a, b) => b.id - a.id);
+}
+
 async function getLastIndexOfList(list) {
     try {
-        if (list.length > 0) {
-            return list.sort((a, b) => b.id - a.id)[0].id++;
-        } else {
-            return 0;
-        }
+        if (list.length < 1) return 0;
+        return sortData(list)[0].id++;
     } catch (e) {
         throw new Error(`Id declaration failed with error: ${e}`);
     }
