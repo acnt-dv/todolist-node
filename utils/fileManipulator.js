@@ -21,7 +21,7 @@ async function readData() {
         console.log('Reading file ...');
         return JSON.parse(fs.readFileSync(__dirname + '/../data/list.json').toString());
     } catch (e) {
-        throw new Error(`Reading failed with error: ${e.stackTrace}`);
+        throw new Error(`Reading failed with error: ${e}`);
     }
 }
 
@@ -31,7 +31,7 @@ function writeData(storageData) {
         fs.writeFileSync(__dirname + '/../data/list.json', JSON.stringify(storageData), /*{flag: "a+"}*/);
         return 'File manipulated successfully.';
     } catch (e) {
-        throw new Error(`Writing failed with error: ${e.stackTrace}`);
+        throw new Error(`Writing failed with error: ${e}`);
     }
 }
 
@@ -39,19 +39,38 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
+async function getLastIndexOfList(list) {
+    try {
+        if (list.length > 0) {
+            return list.sort((a, b) => b.id - a.id)[0].id++;
+        } else {
+            return 0;
+        }
+    } catch (e) {
+        throw new Error(`Id declaration failed with error: ${e}`);
+    }
+}
+
 async function insertData(insertData) {
     try {
         let insertDataEntry = JSON.parse(insertData);
         let storageData = await readData();
+        let id = await getLastIndexOfList(storageData);
+
+        storageData.push({...insertDataEntry, id: id});
+
+        /*
         let checkValue = await checkForDuplicatedEntry(storageData, insertDataEntry);
         if (checkValue.length < 1) {
             storageData.push(insertDataEntry);
         } else {
             //TODO: override
         }
+        */
+
         return writeData(storageData);
     } catch (e) {
-        return (`Insert failed with error: ${e.stackTrace}`);
+        return (`Insert failed with error: ${e}`);
     }
 }
 
@@ -65,7 +84,7 @@ async function updateData(updateData) {
 
         return writeData(storageData);
     } catch (e) {
-        return (`Update failed with error: ${e.stackTrace}`);
+        return (`Update failed with error: ${e}`);
     }
 }
 
@@ -78,7 +97,7 @@ async function deleteData(deleteItem) {
 
         return writeData(storageData);
     } catch (e) {
-        return (`Delete failed with error: ${e.stackTrace}`);
+        return (`Delete failed with error: ${e}`);
     }
 }
 
