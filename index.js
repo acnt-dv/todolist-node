@@ -1,4 +1,4 @@
-const {readData, writeData} = require("./utils/fileManipulator");
+const {readData, insertData, updateData, deleteData} = require("./utils/fileManipulator");
 let bodyParser = require('body-parser');
 let express = require('express');
 let app = express();
@@ -11,10 +11,20 @@ app.get('/getList', function (req, res) {
         .then(response => res.send(response));
 });
 
-app.post('/addToList', function (req, res) {
-    writeData(JSON.stringify(req.body))
+app.post('/insertIntoList', function (req, res) {
+    insertData(JSON.stringify(req.body))
         .then(response => res.end(response));
-})
+});
+
+app.post('/updateList', function (req, res) {
+    updateData(JSON.stringify(req.body))
+        .then(response => res.end(response));
+});
+
+app.post('/deleteFromList', function (req, res) {
+    deleteData(JSON.stringify(req.body))
+        .then(response => res.end(response));
+});
 
 app.get('/home', function (req, res) {
     res.sendFile(__dirname + "/views/" + "index.html");

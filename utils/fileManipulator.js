@@ -17,18 +17,71 @@ readerStream.on('error', function (err) {
 */
 
 async function readData() {
-    console.log('Reading file ...');
-    return fs.readFileSync(__dirname + '/../data/list').toString();
+    try {
+        console.log('Reading file ...');
+        return JSON.parse(fs.readFileSync(__dirname + '/../data/list').toString());
+    } catch (e) {
+        throw new Error(`Reading failed with error: ${e.stackTrace}`);
+    }
 }
 
-async function writeData(newData) {
-    let storageData = readData();
-    storageData = Object.assign(newData);
-
-    fs.writeFileSync(__dirname + '/../data/list', storageData.toString(), {flag: "a+"});
-    return 'File updated successfully.';
+function writeData(storageData) {
+    try {
+        console.log('Writing file ...');
+        fs.writeFileSync(__dirname + '/../data/list', JSON.stringify(storageData), /*{flag: "a+"}*/);
+        return 'File manipulated successfully.';
+    } catch (e) {
+        throw new Error(`Writing failed with error: ${e.stackTrace}`);
+    }
 }
 
-module.exports = {readData, writeData}
+async function checkForDuplicatedEntry(list, entry) {
+    return list.filter(x => x.id === entry.id);
+}
+
+async function insertData(insertData) {
+    try {
+        let insertDataEntry = JSON.parse(insertData);
+        let storageData = await readData();
+        let checkValue = await checkForDuplicatedEntry(storageData, insertDataEntry);
+        if (checkValue.length < 1) {
+            storageData.push(insertDataEntry);
+        } else {
+            //TODO: override
+        }
+        return writeData(storageData);
+    } catch (e) {
+        return (`Insert failed with error: ${e.stackTrace}`);
+    }
+}
+
+async function updateData(updateData) {
+    try {
+        let updateDataEntry = JSON.parse(updateData);
+        let storageData = await readData();
+
+        storageData = storageData.filter(x => x.id !== updateDataEntry.id);
+        storageData.push(updateDataEntry);
+
+        return writeData(storageData);
+    } catch (e) {
+        return (`Update failed with error: ${e.stackTrace}`);
+    }
+}
+
+async function deleteData(deleteItem) {
+    try {
+        let deleteItemEntry = JSON.parse(deleteItem);
+        let storageData = await readData();
+
+        storageData = storageData.filter(x => x.id !== deleteItemEntry.id);
+
+        return writeData(storageData);
+    } catch (e) {
+        return (`Delete failed with error: ${e.stackTrace}`);
+    }
+}
+
+module.exports = {readData, insertData, updateData, deleteData}
 
 
