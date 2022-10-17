@@ -7,6 +7,8 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.get('/getList', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
     readData()
         .then(response => res.send(response));
 });
