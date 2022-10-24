@@ -58,11 +58,10 @@ async function getLastIndexOfList(list) {
 
 async function insertData(insertData) {
     try {
-        let insertDataEntry = JSON.parse(insertData);
         let storageData = await readData();
         let id = await getLastIndexOfList(storageData);
 
-        storageData.push({...insertDataEntry, id: id});
+        storageData.push({...insertData, id: id.toString()});
 
         /*
         let checkValue = await checkForDuplicatedEntry(storageData, insertDataEntry);
@@ -81,11 +80,11 @@ async function insertData(insertData) {
 
 async function updateData(updateData) {
     try {
-        let updateDataEntry = JSON.parse(updateData);
+        // let updateDataEntry = JSON.parse(updateData);
         let storageData = await readData();
 
-        storageData = storageData.filter(x => x.id !== updateDataEntry.id);
-        storageData.push(updateDataEntry);
+        storageData = storageData.filter(x => x.id !== updateData.id);
+        storageData.push(updateData);
 
         return writeData(storageData);
     } catch (e) {
