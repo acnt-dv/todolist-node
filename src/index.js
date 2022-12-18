@@ -14,6 +14,7 @@ app.get('/getList', function (req, res) {
 });
 
 app.post('/insertIntoList', function (req, res) {
+    console.log('new item reached');
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
@@ -24,7 +25,7 @@ app.post('/insertIntoList', function (req, res) {
             return;
         }
         res.json = ({ fields, files });
-
+console.log(res.json);
         insertData(res.json.fields)
             .then(response => res.end(response));
     });
@@ -41,7 +42,7 @@ app.post('/updateList', function (req, res) {
             return;
         }
         res.json = ({ fields, files });
-
+console.log(res.json);
         updateData(res.json.fields)
             .then(response => res.end(response));
     });

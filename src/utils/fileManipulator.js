@@ -35,6 +35,7 @@ function writeData(storageData) {
         fs.writeFileSync(__dirname + '/../data/list.json', JSON.stringify(storageData), /*{flag: "a+"}*/);
         return 'File manipulated successfully.';
     } catch (e) {
+        return (e);
         throw new Error(`Writing failed with error: ${e}`);
     }
 }
