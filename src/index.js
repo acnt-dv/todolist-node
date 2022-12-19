@@ -25,7 +25,7 @@ app.post('/insertIntoList', function (req, res) {
             return;
         }
         res.json = ({ fields, files });
-console.log(res.json);
+
         insertData(res.json.fields)
             .then(response => res.end(response));
     });
@@ -42,7 +42,7 @@ app.post('/updateList', function (req, res) {
             return;
         }
         res.json = ({ fields, files });
-console.log(res.json);
+
         updateData(res.json.fields)
             .then(response => res.end(response));
     });
@@ -50,8 +50,20 @@ console.log(res.json);
 });
 
 app.post('/deleteFromList', function (req, res) {
-    deleteData(JSON.stringify(req.body))
-        .then(response => res.end(response));
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    let form = formidable({ multiples: true });
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        res.json = ({ fields, files });
+        deleteData(JSON.stringify(req.body))
+            .then(response => res.end(response));
+    });
+
 });
 
 app.get('/home', function (req, res) {

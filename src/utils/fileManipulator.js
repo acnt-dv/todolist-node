@@ -95,10 +95,10 @@ async function updateData(updateData) {
 
 async function deleteData(deleteItem) {
     try {
-        let deleteItemEntry = JSON.parse(deleteItem);
+        // let deleteItemEntry = JSON.parse(deleteItem);
         let storageData = await readData();
 
-        storageData = storageData.filter(x => x.id !== deleteItemEntry.id);
+        storageData = storageData.filter(x => x.id !== deleteItem.id);
 
         return writeData(storageData);
     } catch (e) {
