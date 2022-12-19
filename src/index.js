@@ -60,7 +60,7 @@ app.post('/deleteFromList', function (req, res) {
             return;
         }
         res.json = ({ fields, files });
-        deleteData(JSON.stringify(req.body))
+        deleteData(res.json.fields)
             .then(response => res.end(response));
     });
 
