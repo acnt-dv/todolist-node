@@ -9,8 +9,13 @@ app.use(express.static('public'));
 app.get('/getList', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    readData()
-        .then(response => res.send(response));
+
+    try {
+        readData()
+        .then(response => res.send(response));    
+    } catch (error) {
+        return res.send(error);
+    }
 });
 
 app.post('/insertIntoList', function (req, res) {
@@ -26,8 +31,12 @@ app.post('/insertIntoList', function (req, res) {
         }
         res.json = ({ fields, files });
 
-        insertData(res.json.fields)
-            .then(response => res.end(response));
+        try {
+            insertData(res.json.fields)
+            .then(response => res.end(response));   
+        } catch (error) {
+            return res.send(error);
+        }
     });
 });
 
@@ -43,10 +52,13 @@ app.post('/updateList', function (req, res) {
         }
         res.json = ({ fields, files });
 
-        updateData(res.json.fields)
+        try {
+            updateData(res.json.fields)
             .then(response => res.end(response));
+        } catch (error) {
+            return res.send(error);
+        }
     });
-
 });
 
 app.post('/deleteFromList', function (req, res) {
@@ -60,10 +72,14 @@ app.post('/deleteFromList', function (req, res) {
             return;
         }
         res.json = ({ fields, files });
-        deleteData(res.json.fields)
-            .then(response => res.end(response));
-    });
 
+        try {
+            deleteData(res.json.fields)
+            .then(response => res.end(response));
+        } catch (error) {
+            return res.send(error);
+        }
+    });
 });
 
 app.get('/home', function (req, res) {

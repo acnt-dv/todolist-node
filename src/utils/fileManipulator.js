@@ -16,10 +16,10 @@ readerStream.on('error', function (err) {
 });
 */
 
-async function readData() {
+function readData() {
     try {
         console.log('Reading file ...');
-        let storageData = await JSON.parse(fs.readFileSync(__dirname + '/../data/list.json').toString());
+        let storageData = JSON.parse(fs.readFileSync(__dirname + '/../data/list.json').toString());
         if (storageData.length > 0) {
             return sortData(storageData);
         }
