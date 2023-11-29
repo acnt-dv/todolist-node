@@ -2,7 +2,7 @@ const express = require('express');
 const formidable = require('formidable');
 
 const {loadDb} = require("./database/connection");
-const {insertColumn, dropColumn ,readData, insertData, updateData, deleteData} = require("./utils/fileManipulator");
+const {insertColumn, dropColumn ,readData, insertData, updateData, deleteData} = require("./database/utils/sqlManipulator");
 
 let app = express();
 app.use(express.static('public'));

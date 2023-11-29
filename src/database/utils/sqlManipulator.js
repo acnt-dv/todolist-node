@@ -1,38 +1,73 @@
-const {sqlQueries, DB_INFO} = require('../database/queries');
-const {sqlInjection} = require('../database/connection');
+const {sqlQueries, DB_INFO} = require('../queries');
+const {sqlInjection} = require('../connection');
 
 async function insertColumn(columnName) {
     try {
         await sqlInjection(sqlQueries.createColumn(DB_INFO.dbName, DB_INFO.tblName, columnName?.category));
-        return 'category created successfully.'
+
+        return JSON.stringify({
+            status: 200,
+            data: 'category created successfully.',
+            errorMessage: null
+        });
     } catch (e) {
-        throw new Error(`Reading failed with error: ${e}`);
+        return JSON.stringify({
+            status: 204,
+            data: null,
+            errorMessage: `Category creation failed with error: ${e}`
+        });
     }
 }
 
 async function dropColumn(columnName) {
     try {
         await sqlInjection(sqlQueries.dropColumn(DB_INFO.dbName, DB_INFO.tblName, columnName?.category));
-        return 'category deleted successfully.'
+
+        return JSON.stringify({
+            status: 200,
+            data: 'category deleted successfully.',
+            errorMessage: null
+        });
     } catch (e) {
-        throw new Error(`Reading failed with error: ${e}`);
+        return JSON.stringify({
+            status: 204,
+            data: null,
+            errorMessage: `Category deletion failed with error: ${e}`
+        });
     }
 }
 
 async function readData(headers) {
     try {
-        return await sqlInjection(sqlQueries.selectFromTable(DB_INFO.tblName, headers?.category));
+        return JSON.stringify({
+            status: 200,
+            data: await sqlInjection(sqlQueries.selectFromTable(DB_INFO.tblName, headers?.category)),
+            errorMessage: null
+        });
     } catch (e) {
-        throw new Error(`Reading failed with error: ${e}`);
+        return JSON.stringify({
+            status: 204,
+            data: null,
+            errorMessage: `Reading failed with error: ${e}`
+        });
     }
 }
 
 async function writeData(storageData) {
     try {
         await sqlInjection(sqlQueries.insertIntoTable(DB_INFO.tblName, storageData?.columnName, storageData?.id, storageData?.body));
-        return ('File manipulated successfully...');
+
+        return JSON.stringify({
+            status: 200,
+            data: 'File manipulated successfully...',
+            errorMessage: null
+        });
     } catch (e) {
-        throw new Error(`Writing failed with error: ${e}`);
+        return JSON.stringify({
+            status: 204,
+            data: null,
+            errorMessage: `Writing failed with error: ${e}`
+        });
     }
 }
 
@@ -42,7 +77,7 @@ async function insertData(insertData) {
         let storageData = {columnName: insertData?.category, id: id, body: insertData.body}
         return writeData(storageData);
     } catch (e) {
-        return (`Insert failed with error: ${e}`);
+        return (`Inserting failed with error: ${e}`);
     }
 }
 
@@ -56,7 +91,7 @@ async function updateData(updateData) {
 
         return writeData(storageData);
     } catch (e) {
-        return (`Update failed with error: ${e}`);
+        return (`Updating failed with error: ${e}`);
     }
 }
 
@@ -69,7 +104,7 @@ async function deleteData(deleteItem) {
 
         return writeData(storageData);
     } catch (e) {
-        return (`Delete failed with error: ${e}`);
+        return (`Deleting failed with error: ${e}`);
     }
 }
 
