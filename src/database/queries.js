@@ -1,19 +1,26 @@
-const {DATABASE, DATATABLE} = require("../config");
+const {DATABASE} = require("../config");
 
 const DB_INFO = {
     dbName: DATABASE,
-    tblName: DATATABLE,
 }
 
 let sqlQueries = {
     createDataBase: () => {
         return `CREATE DATABASE ${DATABASE}`;
     },
-    createTable: () => {
-        return `CREATE TABLE \`${DATABASE}\`.\`${DATATABLE}\` (
+    createTable: (tableName) => {
+        return `CREATE TABLE \`${DATABASE}\`.\`${tableName}\` (
                     \`id\` INT NOT NULL,
                     \`items\` VARCHAR(250) NULL,
+                    \`isDone\` BOOLEAN NOT NULL,
                     PRIMARY KEY (\`id\`));`
+    },
+    dropTable: (tableName) => {
+        return `DROP TABLE \`${DATABASE}\`.\`${tableName}\``;
+
+    },
+    showAllTables: () => {
+        return `SHOW TABLES`;
     },
     createColumn: (dbName, tableName, columnName) => {
         return `ALTER TABLE \`${dbName}\`.\`${tableName}\`
@@ -23,14 +30,19 @@ let sqlQueries = {
         return `ALTER TABLE \`${dbName}\`.\`${tableName}\`
                 DROP COLUMN \`${columnName}\``;
     },
-    insertIntoTable: (tableName, columnName, id, description) => {
-        return `INSERT INTO ${tableName} (id, ${columnName}) VALUES (${id}, '${description}')`;
+    insertIntoTable: (tableName, id, description) => {
+        return `INSERT INTO \`${tableName}\` (id, items, isDone) VALUES (${id}, '${description}', false)`;
     },
-    selectFromTable: (tableName = DB_INFO.tblName, columnName = '*') => {
-        return `SELECT ${columnName} FROM ${tableName}`;
+    updateIntoTable: (tableName, id) => {
+        return `UPDATE \`todolist\`.\`${tableName}\`
+            SET \`isDone\` = true
+            WHERE \`id\` = ${id}`;
     },
-    selectId: (tableName = DB_INFO.tblName) => {
-        return `SELECT id FROM ${tableName}`;
+    selectFromTable: (tableName) => {
+        return `SELECT * FROM \`${tableName}\``;
+    },
+    selectId: (tableName) => {
+        return `SELECT id FROM \`${tableName}\``;
     }
 }
 

@@ -2,7 +2,7 @@ const express = require('express');
 const formidable = require('formidable');
 
 const {loadDb} = require("./database/connection");
-const {insertColumn, dropColumn ,readData, insertData, updateData, deleteData} = require("./database/utils/sqlManipulator");
+const {insertColumn, dropColumn, readData, readList, insertData, updateData, deleteData} = require("./database/utils/sqlManipulator");
 
 let app = express();
 app.use(express.static('public'));
@@ -49,12 +49,24 @@ app.post('/deleteCategory', function (req, res) {
     });
 });
 
+app.get('/getListNames', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    try {
+        readList()
+            .then(response => res.send(response));
+    } catch (error) {
+        return res.send(error);
+    }
+});
+
 app.get('/getList', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     try {
-        readData(req.headers)
+        readData(req.query)
             .then(response => res.send(response));
     } catch (error) {
         return res.send(error);
@@ -90,7 +102,7 @@ app.post('/updateList', function (req, res) {
     let form = formidable({multiples: true});
     form.parse(req, (err, fields, files) => {
         if (err) {
-            next(err);
+            // next(err);
             return;
         }
         res.json = ({fields, files});

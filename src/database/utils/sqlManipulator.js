@@ -3,7 +3,7 @@ const {sqlInjection} = require('../connection');
 
 async function insertColumn(columnName) {
     try {
-        await sqlInjection(sqlQueries.createColumn(DB_INFO.dbName, DB_INFO.tblName, columnName?.category));
+        await sqlInjection(sqlQueries.createTable(columnName?.category));
 
         return JSON.stringify({
             status: 200,
@@ -21,7 +21,7 @@ async function insertColumn(columnName) {
 
 async function dropColumn(columnName) {
     try {
-        await sqlInjection(sqlQueries.dropColumn(DB_INFO.dbName, DB_INFO.tblName, columnName?.category));
+        await sqlInjection(sqlQueries.dropTable(columnName?.category));
 
         return JSON.stringify({
             status: 200,
@@ -37,25 +37,41 @@ async function dropColumn(columnName) {
     }
 }
 
-async function readData(headers) {
+async function readList(headers) {
     try {
-        return JSON.stringify({
+        return {
             status: 200,
-            data: await sqlInjection(sqlQueries.selectFromTable(DB_INFO.tblName, headers?.category)),
+            data: await sqlInjection(sqlQueries.showAllTables()),
             errorMessage: null
-        });
+        };
     } catch (e) {
-        return JSON.stringify({
+        return {
             status: 204,
             data: null,
             errorMessage: `Reading failed with error: ${e}`
-        });
+        };
+    }
+}
+
+async function readData(headers) {
+    try {
+        return {
+            status: 200,
+            data: await sqlInjection(sqlQueries.selectFromTable(headers?.category)),
+            errorMessage: null
+        };
+    } catch (e) {
+        return {
+            status: 204,
+            data: null,
+            errorMessage: `Reading failed with error: ${e}`
+        };
     }
 }
 
 async function writeData(storageData) {
     try {
-        await sqlInjection(sqlQueries.insertIntoTable(DB_INFO.tblName, storageData?.columnName, storageData?.id, storageData?.body));
+        await sqlInjection(sqlQueries.insertIntoTable(storageData?.columnName, storageData?.id, storageData?.body));
 
         return JSON.stringify({
             status: 200,
@@ -73,25 +89,29 @@ async function writeData(storageData) {
 
 async function insertData(insertData) {
     try {
-        let id = await getLastIndexOfList();
-        let storageData = {columnName: insertData?.category, id: id, body: insertData.body}
+        let id = await getLastIndexOfList(insertData?.category);
+        let storageData = {columnName: insertData?.category, id: id, body: insertData?.body}
         return writeData(storageData);
     } catch (e) {
         return (`Inserting failed with error: ${e}`);
     }
 }
 
-async function updateData(updateData) {
+async function updateData(storageData) {
     try {
-        // let updateDataEntry = JSON.parse(updateData);
-        let storageData = await readData();
+        await sqlInjection(sqlQueries.updateIntoTable(storageData?.category, storageData?.id));
 
-        storageData = storageData.filter(x => x.id !== updateData.id);
-        storageData.push(updateData);
-
-        return writeData(storageData);
+        return JSON.stringify({
+            status: 200,
+            data: 'Item updated successfully...',
+            errorMessage: null
+        });
     } catch (e) {
-        return (`Updating failed with error: ${e}`);
+        return JSON.stringify({
+            status: 204,
+            data: null,
+            errorMessage: `Update failed with error: ${e}`
+        });
     }
 }
 
@@ -108,19 +128,19 @@ async function deleteData(deleteItem) {
     }
 }
 
-async function getLastIndexOfList() {
+async function getLastIndexOfList(tableName) {
     try {
-        let lastData = await fetchLastId();
-        return ++sortData(lastData)[0].id;
+        let lastData = await fetchLastId(tableName);
+        return lastData.length > 0 ? ++sortData(lastData)[0].id : 0;
     } catch (e) {
         throw new Error(`Id declaration failed with error: ${e}`);
     }
 }
 
-async function fetchLastId() {
+async function fetchLastId(tableName) {
     try {
         console.log('Reading file ...');
-        return await sqlInjection(sqlQueries.selectId());
+        return await sqlInjection(sqlQueries.selectId(tableName));
     } catch (e) {
         throw new Error(`Reading failed with error: ${e}`);
     }
@@ -134,6 +154,4 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
-module.exports = {insertColumn, dropColumn, readData, insertData, updateData, deleteData}
-
-
+module.exports = {insertColumn, dropColumn,readList, readData, insertData, updateData, deleteData}
