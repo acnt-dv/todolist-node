@@ -1,7 +1,7 @@
 const {sqlQueries, DB_INFO} = require('../queries');
 const {sqlInjection} = require('../connection');
 
-async function insertColumn(columnName) {
+async function insertCategory(columnName) {
     try {
         await sqlInjection(sqlQueries.createTable(columnName?.category));
 
@@ -19,7 +19,7 @@ async function insertColumn(columnName) {
     }
 }
 
-async function dropColumn(columnName) {
+async function deleteCategory(columnName) {
     try {
         await sqlInjection(sqlQueries.dropTable(columnName?.category));
 
@@ -115,16 +115,21 @@ async function updateData(storageData) {
     }
 }
 
-async function deleteData(deleteItem) {
+async function deleteData(storageData) {
     try {
-        // let deleteItemEntry = JSON.parse(deleteItem);
-        let storageData = await readData();
+        await sqlInjection(sqlQueries.deleteFromTable(storageData?.category, storageData?.id));
 
-        storageData = storageData.filter(x => x.id !== deleteItem.id);
-
-        return writeData(storageData);
+        return JSON.stringify({
+            status: 200,
+            data: 'Item deleted successfully...',
+            errorMessage: null
+        });
     } catch (e) {
-        return (`Deleting failed with error: ${e}`);
+        return JSON.stringify({
+            status: 204,
+            data: null,
+            errorMessage: `delete failed with error: ${e}`
+        });
     }
 }
 
@@ -154,4 +159,4 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
-module.exports = {insertColumn, dropColumn,readList, readData, insertData, updateData, deleteData}
+module.exports = {insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData}

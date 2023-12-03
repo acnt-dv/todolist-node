@@ -34,8 +34,12 @@ let sqlQueries = {
         return `INSERT INTO \`${tableName}\` (id, items, isDone) VALUES (${id}, '${description}', false)`;
     },
     updateIntoTable: (tableName, id) => {
-        return `UPDATE \`todolist\`.\`${tableName}\`
+        return `UPDATE \`${DB_INFO.dbName}\`.\`${tableName}\`
             SET \`isDone\` = true
+            WHERE \`id\` = ${id}`;
+    },
+    deleteFromTable: (tableName, id) => {
+        return `DELETE FROM \`${DB_INFO.dbName}\`.\`${tableName}\`            
             WHERE \`id\` = ${id}`;
     },
     selectFromTable: (tableName) => {

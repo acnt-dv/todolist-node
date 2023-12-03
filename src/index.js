@@ -2,7 +2,7 @@ const express = require('express');
 const formidable = require('formidable');
 
 const {loadDb} = require("./database/connection");
-const {insertColumn, dropColumn, readData, readList, insertData, updateData, deleteData} = require("./database/utils/sqlManipulator");
+const {insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData} = require("./database/utils/sqlManipulator");
 
 let app = express();
 app.use(express.static('public'));
@@ -20,7 +20,7 @@ app.post('/buildCategory', function (req, res) {
         res.json = ({fields, files});
 
         try {
-            insertColumn(res.json.fields)
+            insertCategory(res.json.fields)
                 .then(response => res.send(response));
         } catch (error) {
             return res.send(error);
@@ -41,7 +41,7 @@ app.post('/deleteCategory', function (req, res) {
         res.json = ({fields, files});
 
         try {
-            dropColumn(res.json.fields)
+            deleteCategory(res.json.fields)
                 .then(response => res.send(response));
         } catch (error) {
             return res.send(error);
@@ -123,7 +123,7 @@ app.post('/deleteFromList', function (req, res) {
     let form = formidable({multiples: true});
     form.parse(req, (err, fields, files) => {
         if (err) {
-            next(err);
+            // next(err);
             return;
         }
         res.json = ({fields, files});
