@@ -144,7 +144,6 @@ async function getLastIndexOfList(tableName) {
 
 async function fetchLastId(tableName) {
     try {
-        console.log('Reading file ...');
         return await sqlInjection(sqlQueries.selectId(tableName));
     } catch (e) {
         throw new Error(`Reading failed with error: ${e}`);

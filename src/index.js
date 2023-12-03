@@ -74,7 +74,6 @@ app.get('/getList', function (req, res) {
 });
 
 app.post('/insertIntoList', function (req, res) {
-    console.log('new item reached');
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
