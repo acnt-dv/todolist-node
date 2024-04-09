@@ -1,8 +1,8 @@
 const express = require('express');
 const formidable = require('formidable');
 
-const {loadDb} = require("./database/connection");
-const {insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData} = require("./database/utils/sqlManipulator");
+const {loadDb} = require("./src/database/connection");
+const {insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData} = require("./src/database/utils/sqlManipulator");
 
 let app = express();
 app.use(express.static('public'));
