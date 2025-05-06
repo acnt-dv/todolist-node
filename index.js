@@ -15,11 +15,13 @@ app.post('/buildCategory', function (req, res) {
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
+            console.error(err);
             return;
         }
         res.json = ({fields, files});
 
         try {
+            console.log(`inserting category ${JSON.stringify(fields)}`);
             insertCategory(res.json.fields)
                 .then(response => res.send(response));
         } catch (error) {
@@ -36,11 +38,13 @@ app.post('/deleteCategory', function (req, res) {
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
+            console.error(err);
             return;
         }
         res.json = ({fields, files});
 
         try {
+            console.log(`deleting category ${JSON.stringify(fields)}`);
             deleteCategory(res.json.fields)
                 .then(response => res.send(response));
         } catch (error) {
@@ -54,6 +58,7 @@ app.get('/getListNames', function (req, res) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     try {
+        console.log(`getting list of names...`);
         readList()
             .then(response => res.send(response));
     } catch (error) {
@@ -66,6 +71,7 @@ app.get('/getList', function (req, res) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     try {
+        console.log(`getting list...`);
         readData(req.query)
             .then(response => res.send(response));
     } catch (error) {
@@ -81,11 +87,13 @@ app.post('/insertIntoList', function (req, res) {
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
+            console.error(err);
             return;
         }
         res.json = ({fields, files});
 
         try {
+            console.log(`inserting item into list ${JSON.stringify(fields)}`);
             insertData(res.json.fields)
                 .then(response => res.send(response));
         } catch (error) {
@@ -102,11 +110,13 @@ app.post('/updateList', function (req, res) {
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
+            console.error(err);
             return;
         }
         res.json = ({fields, files});
 
         try {
+            console.log(`updating list ${JSON.stringify(fields)}`);
             updateData(res.json.fields)
                 .then(response => res.end(response));
         } catch (error) {
@@ -123,11 +133,13 @@ app.post('/deleteFromList', function (req, res) {
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
+            console.error(err);
             return;
         }
         res.json = ({fields, files});
 
         try {
+            console.log(`deleting from list ${JSON.stringify(fields)}`);
             deleteData(res.json.fields)
                 .then(response => res.end(response));
         } catch (error) {
