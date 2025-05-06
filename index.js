@@ -58,7 +58,7 @@ app.get('/getListNames', function (req, res) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     try {
-        console.log(`getting list of names...`);
+        console.log(`getting list of users...`);
         readList()
             .then(response => res.send(response));
     } catch (error) {
@@ -71,7 +71,7 @@ app.get('/getList', function (req, res) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     try {
-        console.log(`getting list...`);
+        console.log(`getting list of ${JSON.stringify(req?.query)}`);
         readData(req.query)
             .then(response => res.send(response));
     } catch (error) {
