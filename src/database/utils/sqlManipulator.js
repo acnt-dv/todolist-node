@@ -1,5 +1,5 @@
-const {sqlQueries, DB_INFO} = require('../queries');
-const {sqlInjection} = require('../connection');
+const { sqlQueries, DB_INFO } = require('../queries');
+const { sqlInjection } = require('../connection');
 
 async function insertCategory(columnName) {
     try {
@@ -19,9 +19,12 @@ async function insertCategory(columnName) {
     }
 }
 
-async function insertUser(userName, password){
+async function insertUser(userFields) {
     try {
         await sqlInjection(sqlQueries.createUsersTable());
+        
+        const id = await getLastIndexOfList('USERS');
+        await sqlInjection(sqlQueries.insertIntoUsersTable(id, userFields?.userName, userFields?.password));
 
         return JSON.stringify({
             status: 200,
@@ -108,7 +111,7 @@ async function writeData(storageData) {
 async function insertData(insertData) {
     try {
         let id = await getLastIndexOfList(insertData?.category);
-        let storageData = {columnName: insertData?.category, id: id, body: insertData?.body}
+        let storageData = { columnName: insertData?.category, id: id, body: insertData?.body }
         return writeData(storageData);
     } catch (e) {
         return (`Inserting failed with error: ${e}`);
@@ -176,4 +179,4 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
-module.exports = {insertUser, insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData}
+module.exports = { insertUser, insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData }

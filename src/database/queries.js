@@ -40,6 +40,9 @@ let sqlQueries = {
     insertIntoTable: (tableName, id, description) => {
         return `INSERT INTO \`${tableName}\` (id, items, isDone) VALUES (${id}, '${description}', false)`;
     },
+    insertIntoUsersTable: (id, userName, password) => {
+        return `INSERT INTO \`USERS\` (id, userName, password) VALUES (${id}, '${userName}', ${password})`;
+    },
     updateIntoTable: (tableName, id) => {
         return `UPDATE \`${DB_INFO.dbName}\`.\`${tableName}\`
             SET \`isDone\` = true

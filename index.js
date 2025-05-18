@@ -43,7 +43,7 @@ app.post('/signUp', function (req, res) {
         res.json = ({ fields, files });
 
         try {
-            console.log(`inserting category ${JSON.stringify(fields)}`);
+            console.log(`inserting users ${JSON.stringify(fields)}`);
             insertUser(res.json.fields)
                 .then(response => res.send(response));
         } catch (error) {
