@@ -55,6 +55,9 @@ let sqlQueries = {
     selectFromTable: (tableName) => {
         return `SELECT * FROM \`${tableName}\``;
     },
+    checkDuplicateUserInTable: (userName) => {
+        return `SELECT COUNT(*)  AS total FROM USERS WHERE userName = '${userName}'`;
+    },
     selectId: (tableName) => {
         return `SELECT id FROM \`${tableName}\``;
     }

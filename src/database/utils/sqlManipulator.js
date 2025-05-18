@@ -24,6 +24,11 @@ async function insertUser(userFields) {
         await sqlInjection(sqlQueries.createUsersTable());
         
         const id = await getLastIndexOfList('USERS');
+        const totalData = await sqlInjection(sqlQueries.checkDuplicateUserInTable(userFields?.userName));
+        const isDuplicated = totalData[0].total > 0;
+        
+        if (isDuplicated) throw new Error('User name is taken...');
+        
         await sqlInjection(sqlQueries.insertIntoUsersTable(id, userFields?.userName, userFields?.password));
 
         return JSON.stringify({
