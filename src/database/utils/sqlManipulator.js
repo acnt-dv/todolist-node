@@ -19,6 +19,24 @@ async function insertCategory(columnName) {
     }
 }
 
+async function insertUser(userName, password){
+    try {
+        await sqlInjection(sqlQueries.createUsersTable());
+
+        return JSON.stringify({
+            status: 200,
+            data: 'signed up succesfully.',
+            errorMessage: null
+        });
+    } catch (error) {
+        return JSON.stringify({
+            status: 500,
+            data: null,
+            errorMessage: `sign up failed with error: ${error}`
+        })
+    }
+}
+
 async function deleteCategory(columnName) {
     try {
         await sqlInjection(sqlQueries.dropTable(columnName?.category));
@@ -158,4 +176,4 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
-module.exports = {insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData}
+module.exports = {insertUser, insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData}

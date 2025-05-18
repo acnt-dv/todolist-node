@@ -23,6 +23,7 @@ async function loadDb(){
     if(!response){
         await sqlInjection(sqlQueries.createDataBase(DATABASE));
         await sqlInjection(sqlQueries.createTable());
+        await sqlInjection(sqlQueries.createUsersTable());
     }
 
     connection = mysql.createConnection({

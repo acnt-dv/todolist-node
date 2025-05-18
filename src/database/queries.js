@@ -15,6 +15,13 @@ let sqlQueries = {
                     \`isDone\` BOOLEAN NOT NULL,
                     PRIMARY KEY (\`id\`));`
     },
+    createUsersTable: () => {
+        return `CREATE TABLE IF NOT EXISTS \`${DATABASE}\`.\`USERS\` (
+                    \`id\` INT NOT NULL,
+                    \`username\` VARCHAR(250) NULL,
+                    \`password\` VARCHAR(250) NULL,
+                    PRIMARY KEY (\`id\`));`
+    },
     dropTable: (tableName) => {
         return `DROP TABLE \`${DATABASE}\`.\`${tableName}\``;
 

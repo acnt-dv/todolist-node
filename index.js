@@ -1,8 +1,8 @@
 const express = require('express');
 const formidable = require('formidable');
 
-const {loadDb} = require("./src/database/connection");
-const {insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData} = require("./src/database/utils/sqlManipulator");
+const { loadDb } = require("./src/database/connection");
+const { insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData, insertUser } = require("./src/database/utils/sqlManipulator");
 
 let app = express();
 app.use(express.static('public'));
@@ -11,14 +11,14 @@ app.post('/buildCategory', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    let form = formidable({multiples: true});
+    let form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
             console.error(err);
             return;
         }
-        res.json = ({fields, files});
+        res.json = ({ fields, files });
 
         try {
             console.log(`inserting category ${JSON.stringify(fields)}`);
@@ -30,18 +30,40 @@ app.post('/buildCategory', function (req, res) {
     });
 });
 
+app.post('/signUp', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    let form = formidable({ multiples: true });
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        res.json = ({ fields, files });
+
+        try {
+            console.log(`inserting category ${JSON.stringify(fields)}`);
+            insertUser(res.json.fields)
+                .then(response => res.send(response));
+        } catch (error) {
+            return res.send(error);
+        }
+    });
+})
+
 app.post('/deleteCategory', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    let form = formidable({multiples: true});
+    let form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
             console.error(err);
             return;
         }
-        res.json = ({fields, files});
+        res.json = ({ fields, files });
 
         try {
             console.log(`deleting category ${JSON.stringify(fields)}`);
@@ -83,14 +105,14 @@ app.post('/insertIntoList', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    let form = formidable({multiples: true});
+    let form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
             console.error(err);
             return;
         }
-        res.json = ({fields, files});
+        res.json = ({ fields, files });
 
         try {
             console.log(`inserting item into list ${JSON.stringify(fields)}`);
@@ -106,14 +128,14 @@ app.post('/updateList', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    let form = formidable({multiples: true});
+    let form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
             console.error(err);
             return;
         }
-        res.json = ({fields, files});
+        res.json = ({ fields, files });
 
         try {
             console.log(`updating list ${JSON.stringify(fields)}`);
@@ -129,14 +151,14 @@ app.post('/deleteFromList', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
-    let form = formidable({multiples: true});
+    let form = formidable({ multiples: true });
     form.parse(req, (err, fields, files) => {
         if (err) {
             // next(err);
             console.error(err);
             return;
         }
-        res.json = ({fields, files});
+        res.json = ({ fields, files });
 
         try {
             console.log(`deleting from list ${JSON.stringify(fields)}`);
@@ -164,10 +186,3 @@ let server = app.listen(8081, async function () {
 
     console.log("Example app listening at http://%s:%s", host, port);
 })
-
-
-
-
-
-
-
