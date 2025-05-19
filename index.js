@@ -2,7 +2,7 @@ const express = require('express');
 const formidable = require('formidable');
 
 const { loadDb } = require("./src/database/connection");
-const { insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData, insertUser } = require("./src/database/utils/sqlManipulator");
+const { insertCategory, deleteCategory, readData, readList, insertData, updateData, deleteData, insertUser, login } = require("./src/database/utils/sqlManipulator");
 
 let app = express();
 app.use(express.static('public'));
@@ -50,7 +50,30 @@ app.post('/signUp', function (req, res) {
             return res.send(error);
         }
     });
-})
+});
+
+app.post('/login', function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+
+    let form = formidable({ multiples: true });
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        res.json = ({ fields, files });
+
+        try {
+            console.log();
+            login(res.json.fields)
+                .then(response => res.send(response));
+
+        } catch (error) {
+            return res.send(error);
+        }
+    })
+});
 
 app.post('/deleteCategory', function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");

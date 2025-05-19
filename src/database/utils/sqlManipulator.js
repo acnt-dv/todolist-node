@@ -45,6 +45,33 @@ async function insertUser(userFields) {
     }
 }
 
+async function login(loginInfo) {
+    try {
+        const userListResult = await sqlInjection(sqlQueries.selectUserFromTable(loginInfo?.userName));
+        const plainArray = JSON.parse(JSON.stringify(userListResult[0]));
+
+        if (plainArray?.password === loginInfo?.password) {
+            return JSON.stringify({
+                status: 200,
+                data: 'loged in succesfully.',
+                errorMessage: null
+            });
+        } else {
+            return JSON.stringify({
+                status: 403,
+                data: 'loged in failed.',
+                errorMessage: null
+            });
+        }
+    } catch (error) {
+        return JSON.stringify({
+            status: 500,
+            data: null,
+            errorMessage: `login failed with error: ${error}`
+        });
+    }
+}
+
 async function deleteCategory(columnName) {
     try {
         await sqlInjection(sqlQueries.dropTable(columnName?.category));
@@ -184,4 +211,4 @@ async function checkForDuplicatedEntry(list, entry) {
     return list.filter(x => x.id === entry.id);
 }
 
-module.exports = { insertUser, insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData }
+module.exports = { insertUser, login, insertCategory, deleteCategory, readList, readData, insertData, updateData, deleteData }
