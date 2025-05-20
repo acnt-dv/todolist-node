@@ -51,8 +51,17 @@ async function insertUser(userFields) {
 
 async function login(loginInfo) {
     try {
+        const userNotFound = JSON.stringify({
+            status: 404,
+            data: null,
+            errorMessage: 'user not found!'
+        });
+
         const userListResult = await sqlInjection(sqlQueries.selectUserFromTable(loginInfo?.userName));
-        const plainArray = JSON.parse(JSON.stringify(userListResult[0]));
+
+        if (userListResult?.length < 1) return userNotFound;
+
+        const plainArray = JSON.parse(JSON.stringify(userListResult?.[0]));
 
         if (plainArray?.password === loginInfo?.password) {
             return JSON.stringify({
@@ -61,11 +70,7 @@ async function login(loginInfo) {
                 errorMessage: null
             });
         } else {
-            return JSON.stringify({
-                status: 404,
-                data: null,
-                errorMessage: 'user not found!'
-            });
+            return userNotFound;
         }
     } catch (error) {
         return JSON.stringify({
