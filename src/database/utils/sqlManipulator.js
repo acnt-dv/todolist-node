@@ -27,7 +27,7 @@ async function insertUser(userFields) {
         const totalData = await sqlInjection(sqlQueries.checkDuplicateUserInTable(userFields?.userName));
         const isDuplicated = totalData[0].total > 0;
 
-        if (isDuplicated) throw new Error(JSON.stringify({
+        if (isDuplicated) return (JSON.stringify({
             status: 409,
             data: null,
             errorMessage: 'User name is taken'
