@@ -27,7 +27,11 @@ async function insertUser(userFields) {
         const totalData = await sqlInjection(sqlQueries.checkDuplicateUserInTable(userFields?.userName));
         const isDuplicated = totalData[0].total > 0;
 
-        if (isDuplicated) throw new Error('User name is taken...');
+        if (isDuplicated) throw new Error(JSON.stringify({
+            status: 409,
+            data: null,
+            errorMessage: 'User name is taken'
+        }));
 
         await sqlInjection(sqlQueries.insertIntoUsersTable(id, userFields?.userName, userFields?.password));
 
@@ -58,14 +62,14 @@ async function login(loginInfo) {
             });
         } else {
             return JSON.stringify({
-                status: 409,
+                status: 404,
                 data: null,
-                errorMessage: 'loged in failed. dupplicate info'
+                errorMessage: 'user not found!'
             });
         }
     } catch (error) {
         return JSON.stringify({
-            status: 403,
+            status: 500,
             data: null,
             errorMessage: `login failed with error: ${error}`
         });
