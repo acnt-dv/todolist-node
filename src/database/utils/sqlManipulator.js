@@ -58,14 +58,14 @@ async function login(loginInfo) {
             });
         } else {
             return JSON.stringify({
-                status: 403,
-                data: 'loged in failed.',
-                errorMessage: null
+                status: 409,
+                data: null,
+                errorMessage: 'loged in failed. dupplicate info'
             });
         }
     } catch (error) {
         return JSON.stringify({
-            status: 500,
+            status: 403,
             data: null,
             errorMessage: `login failed with error: ${error}`
         });

@@ -45,7 +45,7 @@ app.post('/signUp', function (req, res) {
         try {
             console.log(`inserting users ${JSON.stringify(fields)}`);
             insertUser(res.json.fields)
-                .then(response => res.send(response));
+                .then(response => res.status(JSON.parse(response)?.status).send(response));
         } catch (error) {
             return res.send(error);
         }
@@ -65,9 +65,9 @@ app.post('/login', function (req, res) {
         res.json = ({ fields, files });
 
         try {
-            console.log();
+            console.log(`loggin user ${JSON.stringify(fields)}`);
             login(res.json.fields)
-                .then(response => res.send(response));
+                .then(response => res.status(JSON.parse(response)?.status).send(response));
 
         } catch (error) {
             return res.send(error);
